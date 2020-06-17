@@ -1,4 +1,5 @@
 import json
+import re
 import smtplib
 from email.mime.text import MIMEText
 import traceback
@@ -21,8 +22,18 @@ def start(email, psswd, test=0):
         data.append('Read More: ' + ele['readMoreUrl'] + '\n')
         data.append("-----------------------------------\n\n")
 
-    # conn = smtplib.SMTP('smtp.gmail.com', 587) # for gmail
-    conn = smtplib.SMTP('smtp.office365.com', 587)  # for outlook
+    gmail = 'smtp.gmail.com'
+    outlook = 'smtp.office365.com'
+    email_provider = re.findall("(.*)@(.*)\.(.*)", email)[0][1]
+    # print(re.findall("(.*)@(.*)\.(.*)", email))
+
+    if email_provider == 'gmail':
+        conn = smtplib.SMTP(gmail, 587)
+    elif email_provider == 'outlook':
+        conn = smtplib.SMTP(outlook, 587)
+    else:
+        print("Email provider not supported. Please open issue on Github..")
+        return
 
     # start TLS for security
     conn.starttls()
@@ -41,6 +52,7 @@ def start(email, psswd, test=0):
     SUBJECT = "News delivered to your mailbox!\n\n"
     TEXT = ''.join(data)
 
+    # https://stackoverflow.com/questions/1429147/python-3-smtplib-send-with-unicode-characters
     msg = MIMEText(TEXT.encode('utf-8'), _charset='utf-8')
     msg['Subject'] = SUBJECT
     msg['From'] = email

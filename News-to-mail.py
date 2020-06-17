@@ -1,7 +1,9 @@
-import os
 import json
+import os
 import traceback
-from base64 import b64encode, b64decode
+from base64 import b64decode
+from base64 import b64encode
+
 from Base import main
 
 
@@ -56,3 +58,6 @@ else:
     test = 0
 
 start(test=test)
+
+# todo: add scheduler
+# todo: add category selection

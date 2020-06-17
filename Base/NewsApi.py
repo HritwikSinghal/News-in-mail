@@ -31,7 +31,7 @@ def getNews(category):
         try:
             title = card.find(class_='news-card-title').find('a').text
         except AttributeError:
-            title = None
+            title = 'None'
 
         # try:
         #     imageUrl = card.find(
@@ -43,13 +43,13 @@ def getNews(category):
             url = ('https://www.inshorts.com' + card.find(class_='news-card-title')
                    .find('a').get('href'))
         except AttributeError:
-            url = None
+            url = 'None'
 
         try:
             content = card.find(class_='news-card-content').find('div').text
             # content = '\n'.join(content.split(". "))
         except AttributeError:
-            content = None
+            content = 'None'
 
         # try:
         #     author = card.find(class_='author').text
@@ -59,12 +59,12 @@ def getNews(category):
         try:
             date = card.find(clas='date').text
         except AttributeError:
-            date = None
+            date = 'None'
 
         try:
             time = card.find(class_='time').text
         except AttributeError:
-            time = None
+            time = 'None'
 
         newsObject = {
             'title': str(title).strip(),
