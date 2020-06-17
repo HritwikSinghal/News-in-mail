@@ -38,11 +38,11 @@ def start(email, psswd, test=0):
     conn.login(email, psswd)
 
     # message to be sent
-    message = "Subject: News delivered to your mailbox!\n\n"
-    message = message + ''.join(data)
+    SUBJECT = "News delivered to your mailbox!\n\n"
+    TEXT = ''.join(data)
 
-    msg = MIMEText(message.encode('utf-8'), _charset='utf-8')
-    msg['Subject'] = 'Hello'
+    msg = MIMEText(TEXT.encode('utf-8'), _charset='utf-8')
+    msg['Subject'] = SUBJECT
     msg['From'] = email
     msg['To'] = email
 
