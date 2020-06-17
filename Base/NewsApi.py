@@ -13,17 +13,11 @@ def getNews(category):
             htmlBody = requests.get('https://www.inshorts.com/en/read/')
 
     except requests.exceptions.RequestException as e:
-        newsDictionary['success'] = False
-        newsDictionary['error'] = str(e.message)
+        newsDictionary.append(str(e.message))
         return newsDictionary
 
     soup = BeautifulSoup(htmlBody.text, 'html5lib')
     newsCards = soup.find_all(class_='news-card')
-
-    if not newsCards:
-        newsDictionary['success'] = False
-        newsDictionary['error'] = 'Invalid Category'
-        return newsDictionary
 
     for index, card in enumerate(newsCards):
 
@@ -32,7 +26,7 @@ def getNews(category):
             if str(readMoreUrl).startswith('https://ad.doubleclick.net/'):
                 continue
         except AttributeError:
-            readMoreUrl = None
+            readMoreUrl = 'None'
 
         try:
             title = card.find(class_='news-card-title').find('a').text
@@ -53,6 +47,7 @@ def getNews(category):
 
         try:
             content = card.find(class_='news-card-content').find('div').text
+            # content = '\n'.join(content.split(". "))
         except AttributeError:
             content = None
 

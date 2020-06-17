@@ -9,7 +9,7 @@ def get_cred(test=0):
     path = os.path.join(os.getcwd(), "Base", "creds.json")
     success = 0
     if os.path.isfile(path):
-        print("Loading Creds...")
+        print("Loading Login details...")
         with open(path, 'r') as fp:
             try:
                 creds = json.load(fp)
@@ -35,17 +35,18 @@ def get_cred(test=0):
         creds['email'] = str(b64encode(email.encode('utf-8')))
         creds['password'] = str(b64encode(psswd.encode('utf-8')))
 
-        print("Saving Creds...")
+        print("Saving Login details...")
         with open(path, 'w+') as fp:
             json.dump(creds, fp)
         print("Creds Saved.")
 
-    print("Creds Loaded.")
+    print("Login details Loaded.")
     return email, psswd
 
 
 def start(test=0):
     email, psswd = get_cred(test=test)
+    print()
     main.start(email, psswd, test=test)
 
 
