@@ -1,7 +1,7 @@
 # News-in-mail
 Get Summary of latest news delivered to your mailbox!
 
-###Installation:
+### Installation:
 
 - Download and Install python 3:
 ```
