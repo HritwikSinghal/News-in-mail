@@ -1,13 +1,19 @@
 import json
 import re
 import smtplib
-from email.mime.text import MIMEText
 import traceback
+from email.mime.text import MIMEText
 
 from Base import NewsApi
 
+provider_list = {
+    'gmail': ('smtp.gmail.com', 587),
+    'outlook': ('smtp.office365.com', 587)
 
-def start(email, psswd, test=0):
+}
+
+
+def getNews():
     news_cards = json.loads(NewsApi.getNews('all'))
 
     data = []
@@ -15,23 +21,26 @@ def start(email, psswd, test=0):
         # print(ele)
         # print("-----------------\n")
 
-        data.append('\033' + ele['title'] + '\033' + '\n')
+        data.append(ele['title'] + '\n')
         data.append(ele['date'] + ' ' + ele['time'] + '\n\n')
 
         data.append(ele['content'] + "\n\n")
         data.append('Read More: ' + ele['readMoreUrl'] + '\n')
         data.append("-----------------------------------\n\n")
+    return data
 
-    gmail = 'smtp.gmail.com'
-    outlook = 'smtp.office365.com'
-    email_provider = re.findall("(.*)@(.*)\.(.*)", email)[0][1]
-    # print(re.findall("(.*)@(.*)\.(.*)", email))
 
-    if email_provider == 'gmail':
-        conn = smtplib.SMTP(gmail, 587)
-    elif email_provider == 'outlook':
-        conn = smtplib.SMTP(outlook, 587)
-    else:
+def start(email, psswd, test=0):
+    data = getNews()
+    domain_provider = re.findall("(.*)@(.*)\.(.*)", email)[0][1]
+
+    try:
+        conn = smtplib.SMTP(provider_list[domain_provider][0],
+                            provider_list[domain_provider][1])
+    except KeyError:
+        if test:
+            traceback.print_exc()
+        print("Email Provider detected: ", domain_provider)
         print("Email provider not supported. Please open issue on Github..")
         return
 

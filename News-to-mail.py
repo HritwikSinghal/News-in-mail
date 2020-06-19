@@ -48,7 +48,6 @@ def get_cred(test=0):
 
 def start(test=0):
     email, psswd = get_cred(test=test)
-    print()
     main.start(email, psswd, test=test)
 
 
