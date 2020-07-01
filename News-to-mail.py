@@ -61,8 +61,7 @@ def get_cat(test=0):
                 success = 0
 
     if not success:
-        print("\nSelect from below Categories, for multiple Categories enter corresponding\n"
-              "numbers with spaces")
+        print("\nSelect from below Categories, for multiple Categories enter corresponding numbers with spaces")
 
         all_cat = {
             1: 'national',
@@ -101,9 +100,25 @@ def get_cat(test=0):
 
 
 def start(test=0):
+    print("""
+          _   _                     _______      __  __       _ _ 
+         | \ | |                   |__   __|    |  \/  |     (_) |
+         |  \| | _____      _____     | | ___   | \  / | __ _ _| |
+         | . ` |/ _ \ \ /\ / / __|    | |/ _ \  | |\/| |/ _` | | |
+         | |\  |  __/\ V  V /\__ \    | | (_) | | |  | | (_| | | |
+         |_| \_|\___| \_/\_/ |___/    |_|\___/  |_|  |_|\__,_|_|_|
+                                                                
+                                                        """)
+
     email, psswd = get_cred(test=test)
     cat = get_cat(test=test)
     main.start(email, psswd, cat, test=test)
+
+    print('''
+            \n\t\t\tThank you for Using this program....
+            By Hritwik
+            https://github.com/HritwikSinghal
+        ''')
 
 
 if os.path.isfile('Base/test_bit'):
