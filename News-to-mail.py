@@ -1,6 +1,5 @@
 import json
 import os
-import time
 import traceback
 from base64 import b64decode
 from base64 import b64encode
@@ -127,7 +126,8 @@ def start(test=0):
 
     x = int(input("Enter after how many hours to re-mail\n"))
     start_main()
-    schedule.every(x).seconds.do(start_main)
+    schedule.every(x).hours.do(start_main)
+
     try:
         while True:
             schedule.run_pending()
