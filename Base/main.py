@@ -12,26 +12,29 @@ provider_list = {
 }
 
 
-# todo : improve this
-def getNews(cat='all'):
-    news_cards = json.loads(NewsApi.getNews(cat))
-
+def getNews(cat=['all']):
     data = []
-    for ele in news_cards:
-        # print(ele)
-        # print("-----------------\n")
 
-        data.append(ele['title'] + '\n')
-        data.append(ele['date'] + ' ' + ele['time'] + '\n\n')
+    for category_name in cat:
+        print("Getting News from ", category_name)
+        news_cards = json.loads(NewsApi.getNews(category_name))
+        data.append("\n\t\t\t\t========================= " + category_name.upper() + ' =========================\n\n')
 
-        data.append(ele['content'] + "\n\n")
-        data.append('Read More: ' + ele['readMoreUrl'] + '\n')
-        data.append("-----------------------------------\n\n")
+        for ele in news_cards:
+            # print(ele)
+            # print("-----------------\n")
+
+            data.append(ele['title'] + '\n')
+            data.append(ele['date'] + ' ' + ele['time'] + '\n\n')
+
+            data.append(ele['content'] + "\n\n")
+            data.append('Read More: ' + ele['readMoreUrl'] + '\n')
+            data.append("-----------------------------------\n\n")
     return data
 
 
 # todo: improve verbose
-def start(email, psswd, cat='all', test=0):
+def start(email, psswd, cat=['all'], test=0):
     data = getNews(cat=cat)
     domain_provider = re.findall("(.*)@(.*)\.(.*)", email)[0][1]
 

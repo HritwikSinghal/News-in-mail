@@ -86,27 +86,23 @@ def get_cat(test=0):
         cat = [all_cat[x] for x in select_cat]
 
         save_cat = int(input("\nDo you want to save Categories so next time i wont ask from you?\n"
-                             "\t\t1 == Yes\n"
-                             "\t\t0 == No\n"))
+                             "1 == Yes"
+                             " 0 == No\n"))
         if save_cat:
             print("Saving Categories...")
             with open(path, 'w+') as fp:
                 json.dump(cat, fp)
             print("Categories Saved.")
 
-    print("\nCategories Loaded.")
-    print("Selected Categories: ", cat)
-    print("if you want to change Categories, Go inside 'Base' folder and delete file 'cat.json' or 'cat'")
+    print("Categories Loaded.")
+    print("\nSelected Categories: ", cat)
+    print("if you want to change Categories, Go inside 'Base' folder and delete file 'cat.json' or 'cat'\n")
     return cat
 
 
 def start(test=0):
     email, psswd = get_cred(test=test)
     cat = get_cat(test=test)
-
-    if test:
-        x = input()
-
     main.start(email, psswd, cat, test=test)
 
 
@@ -118,4 +114,3 @@ else:
 start(test=test)
 
 # todo: add scheduler
-# todo: add category selection
