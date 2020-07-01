@@ -46,9 +46,68 @@ def get_cred(test=0):
     return email, psswd
 
 
+def get_cat(test=0):
+    path = os.path.join(os.getcwd(), "Base", "cat.json")
+    success = 0
+    if os.path.isfile(path):
+        print("Loading Categories...")
+        with open(path, 'r') as fp:
+            try:
+                cat = json.load(fp)
+                success = 1
+            except:
+                if test:
+                    traceback.print_exc()
+                success = 0
+
+    if not success:
+        print("\nSelect from below Categories, for multiple Categories enter corresponding\n"
+              "numbers with spaces")
+
+        all_cat = {
+            1: 'national',
+            2: 'business',
+            3: 'sports',
+            4: 'world',
+            5: 'politics',
+            6: 'technology',
+            7: 'startup',
+            8: 'entertainment',
+            9: 'miscellaneous',
+            10: 'hatke',
+            11: 'science',
+            12: 'automobile'
+        }
+
+        for item in all_cat:
+            print(item, ' : ', all_cat[item])
+
+        select_cat = list(set(map(int, input().split())))
+        cat = [all_cat[x] for x in select_cat]
+
+        save_cat = int(input("\nDo you want to save Categories so next time i wont ask from you?\n"
+                             "\t\t1 == Yes\n"
+                             "\t\t0 == No\n"))
+        if save_cat:
+            print("Saving Categories...")
+            with open(path, 'w+') as fp:
+                json.dump(cat, fp)
+            print("Categories Saved.")
+
+    print("\nCategories Loaded.")
+    print("Selected Categories: ", cat)
+    print("if you want to change Categories, Go inside 'Base' folder and delete file 'cat.json' or 'cat'")
+    return cat
+
+
 def start(test=0):
     email, psswd = get_cred(test=test)
-    main.start(email, psswd, test=test)
+    cat = get_cat(test=test)
+
+    if test:
+        x = input()
+
+    main.start(email, psswd, cat, test=test)
 
 
 if os.path.isfile('Base/test_bit'):

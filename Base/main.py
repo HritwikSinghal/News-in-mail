@@ -9,12 +9,12 @@ from Base import NewsApi
 provider_list = {
     'gmail': ('smtp.gmail.com', 587),
     'outlook': ('smtp.office365.com', 587)
-
 }
 
 
-def getNews():
-    news_cards = json.loads(NewsApi.getNews('all'))
+# todo : improve this
+def getNews(cat='all'):
+    news_cards = json.loads(NewsApi.getNews(cat))
 
     data = []
     for ele in news_cards:
@@ -30,8 +30,9 @@ def getNews():
     return data
 
 
-def start(email, psswd, test=0):
-    data = getNews()
+# todo: improve verbose
+def start(email, psswd, cat='all', test=0):
+    data = getNews(cat=cat)
     domain_provider = re.findall("(.*)@(.*)\.(.*)", email)[0][1]
 
     try:
