@@ -1,10 +1,17 @@
 import json
 import os
+import time
 import traceback
 from base64 import b64decode
 from base64 import b64encode
 
+import schedule
+
 from Base import main
+
+email = ''
+psswd = ''
+cat = []
 
 
 def get_cred(test=0):
@@ -99,7 +106,13 @@ def get_cat(test=0):
     return cat
 
 
+def start_main():
+    main.start(email, psswd, cat, test=test)
+
+
 def start(test=0):
+    global cat, email, psswd
+
     print("""
           _   _                     _______      __  __       _ _ 
          | \ | |                   |__   __|    |  \/  |     (_) |
@@ -107,18 +120,27 @@ def start(test=0):
          | . ` |/ _ \ \ /\ / / __|    | |/ _ \  | |\/| |/ _` | | |
          | |\  |  __/\ V  V /\__ \    | | (_) | | |  | | (_| | | |
          |_| \_|\___| \_/\_/ |___/    |_|\___/  |_|  |_|\__,_|_|_|
-                                                                
                                                         """)
 
     email, psswd = get_cred(test=test)
     cat = get_cat(test=test)
-    main.start(email, psswd, cat, test=test)
+
+    x = int(input("Enter after how many hours to re-mail\n"))
+    start_main()
+    schedule.every(x).seconds.do(start_main)
+    try:
+        while True:
+            schedule.run_pending()
+    except:
+        if test:
+            traceback.print_exc()
 
     print('''
             \n\t\t\tThank you for Using this program....
             By Hritwik
             https://github.com/HritwikSinghal
         ''')
+    exit(0)
 
 
 if os.path.isfile('Base/test_bit'):
@@ -128,4 +150,4 @@ else:
 
 start(test=test)
 
-# todo: add scheduler
+# todo: None (You can suggest!)

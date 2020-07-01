@@ -1,6 +1,9 @@
 # News-in-mail
 Get Summary of latest news delivered to your mailbox!
 
+Now supports scheduling! Just enter after how many hours you want to get mail
+and it will automatically send it. (You have to keep program running)
+
 ### Installation:
 
 - Download and Install python 3:
