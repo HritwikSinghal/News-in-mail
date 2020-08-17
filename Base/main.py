@@ -16,25 +16,31 @@ def getNews(cat=['all']):
     data = []
 
     for category_name in cat:
-        print("Getting News from ", category_name)
+        print("Getting '" + category_name.title() + "' News")
         news_cards = json.loads(NewsApi.start(category_name))
+
         data.append("\n\t\t\t\t========================= " + category_name.upper() + ' =========================\n\n')
+        for card in news_cards:
+            details = ''
 
-        for ele in news_cards:
-            # print(ele)
-            # print("-----------------\n")
+            details += card['title'] + '\n'
+            details += card['date'] + ' ' + card['time'] + '\n\n'
 
-            data.append(ele['title'] + '\n')
-            data.append(ele['date'] + ' ' + ele['time'] + '\n\n')
+            details += card['content'] + "\n\n"
+            details += 'Read More: ' + card['readMoreUrl'] + '\n'
+            details += "-----------------------------------\n\n"
 
-            data.append(ele['content'] + "\n\n")
-            data.append('Read More: ' + ele['readMoreUrl'] + '\n')
-            data.append("-----------------------------------\n\n")
+            data.append(details)
+
     return data
 
 
 def start(email, psswd, cat=['all'], test=0):
     data = getNews(cat=cat)
+
+    # if test:
+        # input("STOP")
+
     domain_provider = re.findall("(.*)@(.*)\.(.*)", email)[0][1]
 
     try:
