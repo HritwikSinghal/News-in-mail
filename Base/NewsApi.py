@@ -3,7 +3,7 @@ import json
 from bs4 import BeautifulSoup
 
 
-def getNews(category):
+def fetchNews(category='all'):
     newsDictionary = []
 
     try:
@@ -78,5 +78,11 @@ def getNews(category):
         }
 
         newsDictionary.append(newsObject)
+        if len(newsDictionary) >= 7:
+            break
 
     return json.dumps(newsDictionary)
+
+
+def start(category='all'):
+    return fetchNews(category)

@@ -13,6 +13,28 @@ psswd = ''
 cat = []
 
 
+def input_creds(email, path, psswd, test=0):
+    email = input("Enter Email\n")
+    psswd = input("Enter Password\n")
+
+    creds = {}
+    creds['email'] = str(b64encode(email.encode('utf-8')))
+    creds['password'] = str(b64encode(psswd.encode('utf-8')))
+
+    print("Saving Login details...")
+    try:
+        with open(path, 'w+') as fp:
+            json.dump(creds, fp)
+        print("Creds Saved.")
+    except:
+        if test:
+            traceback.print_exc()
+
+        print("There was some error in storing Credentials.....")
+
+    return email, psswd
+
+
 def get_cred(test=0):
     path = os.path.join(os.getcwd(), "Base", "creds.json")
     success = 0
@@ -37,35 +59,33 @@ def get_cred(test=0):
                 success = 0
 
     if not success:
-        email = input("Enter Email\n")
-        psswd = input("Enter Password\n")
-        creds = {}
-        creds['email'] = str(b64encode(email.encode('utf-8')))
-        creds['password'] = str(b64encode(psswd.encode('utf-8')))
-
-        print("Saving Login details...")
-        with open(path, 'w+') as fp:
-            json.dump(creds, fp)
-        print("Creds Saved.")
+        email, psswd = input_creds(email, path, psswd, test)
 
     print("Login details Loaded.")
     return email, psswd
 
 
-def get_cat(test=0):
-    path = os.path.join(os.getcwd(), "Base", "cat.json")
+def get_cat_and_period(test=0):
+    path = os.path.join(os.getcwd(), "Base", "categories.json")
     success = 0
+
+    # load file containing categories and period
     if os.path.isfile(path):
-        print("Loading Categories...")
+        print("\nLoading Categories & Period...")
         with open(path, 'r') as fp:
             try:
-                cat = json.load(fp)
+                json_data = json.load(fp)
+
+                categories = json_data['categories']
+                period = json_data['period']
+
                 success = 1
             except:
                 if test:
                     traceback.print_exc()
                 success = 0
 
+    # if cannot load, ask them from user
     if not success:
         print("\nSelect from below Categories, for multiple Categories enter corresponding numbers with spaces")
 
@@ -88,21 +108,27 @@ def get_cat(test=0):
             print(item, ' : ', all_cat[item])
 
         select_cat = list(set(map(int, input().split())))
-        cat = [all_cat[x] for x in select_cat]
+        categories = [all_cat[x] for x in select_cat]
 
-        save_cat = int(input("\nDo you want to save Categories so next time i wont ask from you?\n"
-                             "1 == Yes"
-                             " 0 == No\n"))
-        if save_cat:
-            print("Saving Categories...")
+        # input period
+        period = int(input("Enter period to mail (after how many hours should i re-mail news) \n"))
+
+        # saving them
+        save_cat_flag = int(input("\nDo you want to save Categories & Period so next time i wont ask from you?\n"
+                                  "1 == Yes"
+                                  " 0 == No\n"))
+        if save_cat_flag:
+            print("Saving Categories & Period...")
             with open(path, 'w+') as fp:
-                json.dump(cat, fp)
-            print("Categories Saved.")
+                json.dump(categories, fp)
+            print("Saved.")
 
-    print("Categories Loaded.")
-    print("\nSelected Categories: ", cat)
-    print("if you want to change Categories, Go inside 'Base' folder and delete file 'cat.json' or 'cat'\n")
-    return cat
+    print("Categories & Period Loaded.")
+    print("\nSelected Categories: ", categories)
+    print("Selected Perieod: ", period)
+    print("if you want to change Categories & Period, Go inside 'Base' folder and delete file 'categories.json'\n")
+
+    return categories, period
 
 
 def start_main():
@@ -113,18 +139,17 @@ def start(test=0):
     global cat, email, psswd
 
     print("""
-          _   _                     _______      __  __       _ _ 
-         | \ | |                   |__   __|    |  \/  |     (_) |
-         |  \| | _____      _____     | | ___   | \  / | __ _ _| |
-         | . ` |/ _ \ \ /\ / / __|    | |/ _ \  | |\/| |/ _` | | |
-         | |\  |  __/\ V  V /\__ \    | | (_) | | |  | | (_| | | |
-         |_| \_|\___| \_/\_/ |___/    |_|\___/  |_|  |_|\__,_|_|_|
+         __  ___                   _______       ___  ___       ___
+         | \ | |                   |_   _|       |  \/  |     (_) |
+         |  \| | _____      _____    | |  _ __   | \  / | __ _ _| |
+         | . ` |/ _ \ \ /\ / / __|   | | | '_ \  | |\/| |/ _` | | |
+         | |\  |  __/\ V  V /\__ \  _| |_| | | | | |  | | (_| | | |
+         |_| \_|\___| \_/\_/ |___/ |_____|_| |_| |_|  |_|\__,_|_|_|
                                                         """)
 
     email, psswd = get_cred(test=test)
-    cat = get_cat(test=test)
+    cat, x = get_cat_and_period(test=test)
 
-    x = int(input("Enter after how many hours to re-mail\n"))
     start_main()
     schedule.every(x).hours.do(start_main)
 
@@ -134,6 +159,7 @@ def start(test=0):
     except:
         if test:
             traceback.print_exc()
+        print("There was some error in scheduling task. Please open issue on github")
 
     print('''
             \n\t\t\tThank you for Using this program....
@@ -143,11 +169,12 @@ def start(test=0):
     exit(0)
 
 
-if os.path.isfile('Base/test_bit'):
-    test = 1
-else:
-    test = 0
+if __name__ == "__main__":
+    if os.path.isfile('Base/test_bit'):
+        test = 1
+    else:
+        test = 0
 
-start(test=test)
+    start(test=test)
 
 # todo: None (You can suggest!)

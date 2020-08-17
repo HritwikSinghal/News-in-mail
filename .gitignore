@@ -25,4 +25,4 @@ test_bit
 ./test_bit
 creds.json
 ./creds.json
-cat.json
+categories.json

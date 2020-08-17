@@ -17,7 +17,7 @@ def getNews(cat=['all']):
 
     for category_name in cat:
         print("Getting News from ", category_name)
-        news_cards = json.loads(NewsApi.getNews(category_name))
+        news_cards = json.loads(NewsApi.start(category_name))
         data.append("\n\t\t\t\t========================= " + category_name.upper() + ' =========================\n\n')
 
         for ele in news_cards:
@@ -33,7 +33,6 @@ def getNews(cat=['all']):
     return data
 
 
-# todo: improve verbose
 def start(email, psswd, cat=['all'], test=0):
     data = getNews(cat=cat)
     domain_provider = re.findall("(.*)@(.*)\.(.*)", email)[0][1]
@@ -45,11 +44,17 @@ def start(email, psswd, cat=['all'], test=0):
         if test:
             traceback.print_exc()
         print("Email Provider detected: ", domain_provider)
-        print("Email provider not supported. Please open issue on Github..")
+        print("This Email provider is not supported. Please open issue on Github..")
         return
 
     # start TLS for security
-    conn.starttls()
+    try:
+        conn.starttls()
+    except:
+        if test:
+            traceback.print_exc()
+        print("There was some error in starting TLS connection")
+        return
 
     code, extra = conn.ehlo()
     if int(code) not in range(200, 300):
@@ -59,10 +64,16 @@ def start(email, psswd, cat=['all'], test=0):
         return
 
     # Authentication
-    conn.login(email, psswd)
+    try:
+        conn.login(email, psswd)
+    except:
+        if test:
+            traceback.print_exc()
+        print("There was some error in starting establishing connection")
+        return
 
     # message to be sent
-    SUBJECT = "News delivered to your mailbox!\n\n"
+    SUBJECT = "News delivered in your mailbox!\n\n"
     TEXT = ''.join(data)
 
     # https://stackoverflow.com/questions/1429147/python-3-smtplib-send-with-unicode-characters
