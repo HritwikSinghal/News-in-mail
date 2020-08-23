@@ -13,7 +13,7 @@ psswd = ''
 cat = []
 
 
-def input_creds(email, path, psswd, test=0):
+def input_creds(path, test=0):
     email = input("Enter Email\n")
     psswd = input("Enter Password\n")
 
@@ -59,7 +59,7 @@ def get_cred(test=0):
                 success = 0
 
     if not success:
-        email, psswd = input_creds(email, path, psswd, test)
+        email, psswd = input_creds(path, test)
 
     print("Login details Loaded.")
     return email, psswd
