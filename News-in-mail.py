@@ -126,8 +126,6 @@ def get_cat_and_period(test=0):
             with open(path, 'w+') as fp:
                 json.dump(save_data, fp, indent=2)
             print("Saved.")
-            print(categories)
-            input("STOP")
 
     print("Categories & Period Loaded.")
     print("\nSelected Categories: ", categories)
